@@ -1,0 +1,124 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "FullAccessServices",
+            "Effect": "Allow",
+            "Action": [
+                "acm:*",
+                "apigateway:*",
+                "autoscaling:*",
+                "chatbot:*",
+                "cloud9:*",
+                "cloudformation:*",
+                "cloudfront:*",
+                "cloudtrail:*",
+                "cloudwatch:*",
+                "codebuild:*",
+                "codecommit:*",
+                "codedeploy:*",
+                "codepipeline:*",
+                "codestar-connections:*",
+                "codestar-notifications:*",
+                "codestar:*",
+                "ec2:*",
+                "ecr:*",
+                "ecs:*",
+                "elasticbeanstalk:*",
+                "elasticfilesystem:*",
+                "elasticloadbalancing:*",
+                "events:*",
+                "kms:*",
+                "lambda:*",
+                "logs:*",
+                "mobiletargeting:*",
+                "opsworks:*",
+                "s3-object-lambda:*",
+                "s3:*",
+                "ses:*",
+                "sns:*",
+                "ssm:*",
+                "states:*",
+                "tag:*",
+                "xray:*"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "ForAnyValue:IpAddress": {
+                    "aws:SourceIp": [
+                        "x.x.x.x/32"
+                    ]
+                },
+                "StringEquals": {
+                    "aws:RequestedRegion": "us-east-1"
+                }
+            }
+        },
+        {
+            "Sid": "IAMrole",
+            "Effect": "Allow",
+            "Action": [
+                "iam:AttachRolePolicy",
+                "iam:CreatePolicy",
+                "iam:CreateRole"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "ForAnyValue:IpAddress": {
+                    "aws:SourceIp": [
+                        "x.x.x.x/32"
+                    ]
+                },
+                "StringEquals": {
+                    "aws:RequestedRegion": "us-east-1"
+                }
+            }
+        },
+        {
+            "Sid": "IAMCreateServiceLinkedRole",
+            "Effect": "Allow",
+            "Action": "iam:CreateServiceLinkedRole",
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "iam:AWSServiceName": [
+                        "autoscaling.amazonaws.com",
+                        "ec2scheduled.amazonaws.com",
+                        "elasticloadbalancing.amazonaws.com",
+                        "spot.amazonaws.com",
+                        "spotfleet.amazonaws.com",
+                        "transitgateway.amazonaws.com"
+                    ],
+                    "aws:RequestedRegion": "us-east-1"
+                }
+            }
+        },        
+        {
+            "Sid": "IAMPassedToService",
+            "Effect": "Allow",
+            "Action": "iam:PassRole",
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "iam:PassedToService": [
+                        "codepipeline.amazonaws.com",
+                        "lambda.amazonaws.com",
+                        "events.amazonaws.com"
+                    ],
+                    "aws:RequestedRegion": "us-east-1"
+                }
+            }
+        },
+        {
+            "Sid": "DenyAllRegionsExcept",
+            "Effect": "Deny",
+            "Action": "*",
+            "Resource": "*",
+            "Condition": {
+                "StringNotEquals": {
+                    "aws:RequestedRegion": "us-east-1"
+                }
+            }
+        }
+    ]
+}
